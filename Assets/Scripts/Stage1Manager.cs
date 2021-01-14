@@ -37,7 +37,7 @@ public class Stage1Manager : MonoBehaviour
         MakeMap(mapArray, x_idx, y_idx);        //동적으로 맵을 만든다.
         SpawnPlayer();
         SetMainCamera();
-        Player.GetComponent<PlayerManager>().FindCanMove();
+        //Player.GetComponent<PlayerManager>().FindCanMove();
         StartCoroutine(Player.GetComponent<PlayerManager>().ShowCanMove());
         //퀘스트 관련 초기화
         QuestObject.GetComponent<QuestManager>().StartSceneQuest(); //해당 레벨의 퀘스트 시작

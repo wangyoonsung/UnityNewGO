@@ -11,6 +11,11 @@ public class PlayerManager : MonoBehaviour
     public GameObject ar2;
     public GameObject ar3;
     public GameObject ar4;
+
+    public GameObject otherAr1;
+    public GameObject otherAr2;
+    public GameObject otherAr3;
+    public GameObject otherAr4;
     public int playerDir;
     RaycastHit hit;         //hit를 감지하는 변수
     public Vector3 MoveVector;
@@ -23,12 +28,19 @@ public class PlayerManager : MonoBehaviour
 
     public int totalTick;
     public int nowTick;
+
+    public int totalTick2;
+    public int nowTick2;
+
     public bool reStartCoroutine=false;
 
     public GameObject QuestObject;
     public GameObject QuestBomb;
 
     public GameObject UIObject;
+
+    public int testCount = 0;
+    public bool testBool = true;
     // Start is called before the first frame update
     void Start()
     {
@@ -151,7 +163,7 @@ public class PlayerManager : MonoBehaviour
         while (totalTick > nowTick)
         {
             ShrinkObject.gameObject.transform.localScale =
-                new Vector3(ShrinkObject.gameObject.transform.localScale.x-0.05f, ShrinkObject.gameObject.transform.localScale.y-0.05f, ShrinkObject.gameObject.transform.localScale.z-0.05f);
+                new Vector3(ShrinkObject.gameObject.transform.localScale.x+0.002f, ShrinkObject.gameObject.transform.localScale.y+0.002f, ShrinkObject.gameObject.transform.localScale.z+0.002f);
             yield return new WaitForSeconds(0.01f);
         }
     }
@@ -164,45 +176,86 @@ public class PlayerManager : MonoBehaviour
     }
     public IEnumerator ShowCanMove()
     {
-        FindCanMove();
-        while(count>0)
-        {
-            reStartCoroutine = false;
-            if (IsMove==false)
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    FindCanMove();
-                    if (canMoveArr[i])
-                    {
-                        
-                        StartCoroutine(ShrinkObject(ShowArrow(i)));
-                        while(totalTick>nowTick)
-                        {
-                            if(reStartCoroutine)
-                            {
-                                nowTick = 500;
-                                i = 50;
-                                InitialArrowScale();
-                            }
-                            yield return new WaitForSeconds(0.01f);
-                            nowTick++;
-                        }
-                        nowTick = 0;
+        
 
+        while(testBool)
+        {
+            //갈수있는 곳 확인
+            FindCanMove();
+
+            //갈수 있는 곳에 껍데기만들기 & 점점 크게 만들기
+            if (canMoveArr[0])
+            {
+                ar1.transform.position =
+                    new Vector3(transform.position.x + transform.forward.x * 5, transform.position.y + transform.forward.y * 5, transform.position.z + transform.forward.z * 5);
+                otherAr1.transform.position =
+                    new Vector3(transform.position.x + transform.forward.x * 5, transform.position.y + transform.forward.y * 5, transform.position.z + transform.forward.z * 5);
+                StartCoroutine(ShrinkObject(ar1));
+            }
+            if (canMoveArr[1])
+            {
+                ar2.transform.position =
+                    new Vector3(transform.position.x + transform.right.x * 5, transform.position.y + transform.right.y * 5, transform.position.z + transform.right.z * 5);
+                otherAr2.transform.position =
+                    new Vector3(transform.position.x + transform.right.x * 5, transform.position.y + transform.right.y * 5, transform.position.z + transform.right.z * 5);
+                StartCoroutine(ShrinkObject(ar2));
+
+            }
+            if (canMoveArr[2])
+            {
+                ar3.transform.position =
+                    new Vector3(transform.position.x - transform.forward.x * 5, transform.position.y - transform.forward.y * 5, transform.position.z - transform.forward.z * 5);
+                otherAr3.transform.position =
+                    new Vector3(transform.position.x - transform.forward.x * 5, transform.position.y - transform.forward.y * 5, transform.position.z - transform.forward.z * 5);
+                StartCoroutine(ShrinkObject(ar3));
+
+            }
+            if (canMoveArr[3])
+            {
+                ar4.transform.position =
+                    new Vector3(transform.position.x - transform.right.x * 5, transform.position.y - transform.right.y * 5, transform.position.z - transform.right.z * 5);
+                otherAr4.transform.position =
+                   new Vector3(transform.position.x - transform.right.x * 5, transform.position.y - transform.right.y * 5, transform.position.z - transform.right.z * 5);
+                StartCoroutine(ShrinkObject(ar4));
+
+            }
+            //nowTick++;
+            for(int i=0; i<4; i++)
+            {
+
+                if (canMoveArr[i])
+                {
+                    Debug.Log("ddddd");
+
+                    if (GameObject.Find("ar" + (i + 1).ToString()).gameObject.transform.localScale.x>=5)
+                    {
+                        nowTick = 100;
+                        Debug.Log("hisdfsdfdsds");
+                        testBool = false;
+                        break;
+                        
                     }
-                    InitialArrowScale();
                 }
             }
+            yield return new WaitForSeconds(0.01f);
 
-            count--;
+            ////맞는 타이밍에만 히트 가능
+            ////playerDir설정
+            ////SetMoveVector
+            ////MovePlayer
+            //for (int i = 0; i < 4; i++)
+            //{
+            //    if (canMoveArr[i])
+            //    {
+                    
+            //    }
+            //}
             
         }
-        if(count<=0)
-        {
-            SceneManager.LoadScene("SampleScene");
+        
 
-        }
+
+        
 
     }
     public void SetMoveVector()
@@ -233,7 +286,7 @@ public class PlayerManager : MonoBehaviour
     public void MovePlayer()
     {
 
-        SetMoveVector();
+        //SetMoveVector();
 
         transform.Translate(MoveVector.x * Speed * 20, MoveVector.y * Speed * 20, MoveVector.z * Speed * 20);
         reStartCoroutine = true;

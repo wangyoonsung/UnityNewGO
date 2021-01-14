@@ -35,7 +35,7 @@ public class UIManager : MonoBehaviour
                 timerLeftTimer-=0.01f;
                 if (timerLeftTimer < 0)
                 {
-                    SceneManager.LoadScene("SampleScene");
+                   // SceneManager.LoadScene("SampleScene");
                 }
             }
             
